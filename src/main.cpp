@@ -13,6 +13,7 @@
 
 using namespace cartographer;
 std::vector<transform::Rigid3d> local_slam_result_poses_;
+std::vector<transform::Rigid3f> gt;
 
 mapping::proto::MapBuilderOptions                                       mapBuilderOpt;
 
@@ -53,7 +54,7 @@ sensor::proto::AdaptiveVoxelFilterOptions                               lowResAd
 mapping::scan_matching::proto::RealTimeCorrelativeScanMatcherOptions    realTimeCorrOpt3D;
 mapping::scan_matching::proto::CeresScanMatcherOptions3D                ceresScan3DTrajOpt;
 common::proto::CeresSolverOptions                                       ceresSolverOpt3DTraj;
-mapping::scan_matching::proto::IntensityCostFunctionOptions*             intensityCostOpt;
+mapping::scan_matching::proto::IntensityCostFunctionOptions*            intensityCostOpt;
 mapping::proto::MotionFilterOptions                                     motionFilter3dOpt;
 mapping::proto::PoseExtrapolatorOptions                                 poseExtrapolator3dOpt;
 mapping::proto::ConstantVelocityPoseExtrapolatorOptions                 constVel3dOpt;
@@ -109,7 +110,7 @@ void setPoseGraphOptions(){
     ceresScan3DPoseGraphOpt.set_translation_weight(10);
     ceresScan3DPoseGraphOpt.set_rotation_weight(1);
     ceresScan3DPoseGraphOpt.set_only_optimize_yaw(false);
-    
+
     ceresSolverOpt3DPoseGraph.set_use_nonmonotonic_steps(false);
     ceresSolverOpt3DPoseGraph.set_max_num_iterations(10);
     ceresSolverOpt3DPoseGraph.set_num_threads(1);
@@ -138,7 +139,6 @@ void setPoseGraphOptions(){
     ceresSolverOptOptimizationProblem.set_num_threads(7);
     optimizationProblemOpt.set_allocated_ceres_solver_options(&ceresSolverOptOptimizationProblem);
     poseGraphOpt.set_allocated_optimization_problem_options(&optimizationProblemOpt);
-    
 }
 
 void setMapBuilderOptions(){
@@ -146,7 +146,7 @@ void setMapBuilderOptions(){
     mapBuilderOpt.set_use_trajectory_builder_3d(false);
     mapBuilderOpt.set_use_trajectory_builder_2d(true);
     mapBuilderOpt.set_collate_by_trajectory(false);
-    
+
     setPoseGraphOptions();
     mapBuilderOpt.set_allocated_pose_graph_options(&poseGraphOpt);
 }
@@ -191,12 +191,12 @@ void setTrajectoryBuilder2DOptions(){
     ceresSolverOpt2DTraj.set_use_nonmonotonic_steps(false);
     ceresScan2DTrajOpt.set_allocated_ceres_solver_options(&ceresSolverOpt2DTraj);
     traj2dOpt.set_allocated_ceres_scan_matcher_options(&ceresScan2DTrajOpt);
-    
+
     motionFilter2dOpt.set_max_angle_radians(M_PI/180);
     motionFilter2dOpt.set_max_distance_meters(0.2);
     motionFilter2dOpt.set_max_time_seconds(5);
     traj2dOpt.set_allocated_motion_filter_options(&motionFilter2dOpt);
-    
+
     poseExtrapolator2dOpt.set_use_imu_based(false);
 
     constVel2dOpt.set_imu_gravity_time_constant(10);
@@ -218,15 +218,15 @@ void setTrajectoryBuilder2DOptions(){
     imuBasedPoseExtrap2dOpt.set_allocated_solver_options(&solverOptImuBased2d);
     poseExtrapolator2dOpt.set_allocated_imu_based(&imuBasedPoseExtrap2dOpt);
     traj2dOpt.set_allocated_pose_extrapolator_options(&poseExtrapolator2dOpt);
-    
+
     submapsOpt2d.set_num_range_data(90);
 
     gridOpt2d.set_grid_type(mapping::proto::GridOptions2D_GridType::GridOptions2D_GridType_PROBABILITY_GRID);
     gridOpt2d.set_resolution(0.05);
     submapsOpt2d.set_allocated_grid_options_2d(&gridOpt2d);
-    
+
     rangeDataInserterOpt2d.set_range_data_inserter_type(mapping::proto::RangeDataInserterOptions_RangeDataInserterType::RangeDataInserterOptions_RangeDataInserterType_PROBABILITY_GRID_INSERTER_2D);
-    
+
     tsdfRangeInsertOpt2D.set_truncation_distance(0.3);
     tsdfRangeInsertOpt2D.set_maximum_weight(10);
     tsdfRangeInsertOpt2D.set_project_sdf_distance_to_scan_normal(true);
@@ -239,7 +239,7 @@ void setTrajectoryBuilder2DOptions(){
     normalEstimation2DOpt.set_sample_radius(0.5);
     tsdfRangeInsertOpt2D.set_allocated_normal_estimation_options(&normalEstimation2DOpt);
     rangeDataInserterOpt2d.set_allocated_tsdf_range_data_inserter_options_2d(&tsdfRangeInsertOpt2D);
-    
+
     probGridRangeDataInsert2DOpt.set_hit_probability(0.55);
     probGridRangeDataInsert2DOpt.set_insert_free_space(true);
     probGridRangeDataInsert2DOpt.set_miss_probability(0.49);
@@ -257,7 +257,7 @@ void setTrajectoryBuilder3DOptions(){
     traj3dOpt.set_use_online_correlative_scan_matching(false);
     traj3dOpt.set_rotational_histogram_size(120);
     traj3dOpt.set_use_intensities(false);
-    
+
     highResAdaptVoxelOpt.set_max_range(15);
     highResAdaptVoxelOpt.set_min_num_points(150);
     highResAdaptVoxelOpt.set_max_length(2);
@@ -330,58 +330,45 @@ void setTrajectoryBuilder3DOptions(){
     rangeDataInserterOpt3d.set_miss_probability(0.49);
     rangeDataInserterOpt3d.set_num_free_space_voxels(2);
     submapsOpt3d.set_allocated_range_data_inserter_options(&rangeDataInserterOpt3d);
-    traj3dOpt.set_allocated_submaps_options(&submapsOpt3d);   
+    traj3dOpt.set_allocated_submaps_options(&submapsOpt3d);
 }
 
 void setTrajectoryBuilderOptions(){
     setTrajectoryBuilder2DOptions();
     trajBuilderOpt.set_allocated_trajectory_builder_2d_options(&traj2dOpt);
-    
+
     setTrajectoryBuilder3DOptions();
     trajBuilderOpt.set_allocated_trajectory_builder_3d_options(&traj3dOpt);
 }
 
-std::vector<sensor::TimedPointCloudData>
-GenerateFakeRangeMeasurements(double travel_distance, double duration,
-                              double time_step) {
+std::vector<sensor::TimedPointCloudData> GenerateFakeRangeMeasurements(double travel_distance, double duration, double time_step)
+{
     const Eigen::Vector3f kDirection = Eigen::Vector3f(2., 1., 0.).normalized();
     std::vector<sensor::TimedPointCloudData> measurements;
     sensor::TimedPointCloud point_cloud;
-    for (double angle = 0.; angle < M_PI; angle += 0.01) {
-        for (double height : {-0.4, -0.2, 0.0, 0.2, 0.4}) {
-        constexpr double kRadius = 5;
-        point_cloud.push_back({Eigen::Vector3d{kRadius * std::cos(angle),
-                                                kRadius * std::sin(angle), height}
-                                    .cast<float>(),
-                                0.});
+    for (double angle = 0.; angle < M_PI; angle += 0.01){
+        for (double height : {-0.4, -0.2, 0.0, 0.2, 0.4}){
+            constexpr double kRadius = 5;
+            point_cloud.push_back({Eigen::Vector3d{kRadius * std::cos(angle), kRadius * std::sin(angle), height}.cast<float>(), 0.});
         }
     }
     const Eigen::Vector3f kVelocity = kDirection * travel_distance / duration;
     auto local_to_global = transform::Rigid3f::Identity();
-    for (double elapsed_time = 0.; elapsed_time < duration;
-        elapsed_time += time_step) {
-        common::Time time =
-            common::FromUniversal(123) +
-            common::FromSeconds(elapsed_time);
-        transform::Rigid3f global_pose =
-            local_to_global *
-            transform::Rigid3f::Translation(elapsed_time * kVelocity);
-        sensor::TimedPointCloud ranges =
-            sensor::TransformTimedPointCloud(point_cloud,
-                                                        global_pose.inverse());
-        measurements.emplace_back(sensor::TimedPointCloudData{
-            time, Eigen::Vector3f::Zero(), ranges});
+    for (double elapsed_time = 0.; elapsed_time < duration; elapsed_time += time_step){
+
+        common::Time time = common::FromUniversal(123) + common::FromSeconds(elapsed_time);
+        transform::Rigid3f global_pose = local_to_global * transform::Rigid3f::Translation(elapsed_time * kVelocity);
+        gt.push_back(global_pose);
+        sensor::TimedPointCloud ranges = sensor::TransformTimedPointCloud(point_cloud, global_pose.inverse());
+
+        measurements.emplace_back(sensor::TimedPointCloudData{time, Eigen::Vector3f::Zero(), ranges});
     }
     return measurements;
 }
 
-mapping::MapBuilderInterface::LocalSlamResultCallback GetLocalSlamResultCallback() {
-    return [=](const int trajectory_id, const common::Time time,
-               const transform::Rigid3d local_pose,
-               sensor::RangeData range_data_in_local,
-               const std::unique_ptr<
-                   const mapping::TrajectoryBuilderInterface::
-                       InsertionResult>) {
+mapping::MapBuilderInterface::LocalSlamResultCallback GetLocalSlamResultCallback(){
+    return [=](const int trajectory_id, const common::Time time, const transform::Rigid3d local_pose,
+               sensor::RangeData range_data_in_local, const std::unique_ptr<const mapping::TrajectoryBuilderInterface::InsertionResult>){
         std::cout << local_pose << std::endl;
         local_slam_result_poses_.push_back(local_pose);
     };
@@ -390,25 +377,31 @@ mapping::MapBuilderInterface::LocalSlamResultCallback GetLocalSlamResultCallback
 int main(int _argc, char** _argv){
     setMapBuilderOptions();
     setTrajectoryBuilderOptions();
-    
+
     auto mapBuilder = mapping::CreateMapBuilder(mapBuilderOpt);
 
     const mapping::TrajectoryBuilderInterface::SensorId kRangeSensorId{mapping::TrajectoryBuilderInterface::SensorId::SensorType::RANGE, "range"};
     int trajId = mapBuilder->AddTrajectoryBuilder({kRangeSensorId}, trajBuilderOpt, GetLocalSlamResultCallback());
     mapping::TrajectoryBuilderInterface* trajBuilder = mapBuilder->GetTrajectoryBuilder(trajId);
 
-    constexpr double kDuration = 4.;         // Seconds.
-    constexpr double kTimeStep = 0.1;        // Seconds.
-    constexpr double kTravelDistance = 1.2;  // Meters.
+    constexpr double kDuration = 4.;        // Seconds.
+    constexpr double kTimeStep = 0.1;       // Seconds.
+    constexpr double kTravelDistance = 1.2; // Meters.
 
     const auto measurements = GenerateFakeRangeMeasurements(kTravelDistance, kDuration, kTimeStep);
     for (const auto& measurement : measurements) {
         trajBuilder->AddSensorData(kRangeSensorId.id, measurement);
     }
 
+    for(unsigned i = 0; i < gt.size(); i++){
+        std::cout << "-----------------------------------" << std::endl;
+        std::cout  << local_slam_result_poses_[i]<<std::endl;
+        std::cout << gt[i] << std::endl;
+    }
+
     mapBuilder->FinishTrajectory(trajId);
     mapBuilder->pose_graph()->RunFinalOptimization();
     // tb.addOdometry....
-
+    
     return 1;
 }
