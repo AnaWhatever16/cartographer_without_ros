@@ -10,7 +10,7 @@ This is a minimum case use of cartographer 2D SLAM (for now), as the documentati
 First of all, you have to follow the steps from the Cartographer documentation to intall it (without ROS): https://google-cartographer.readthedocs.io/en/latest/index.html
 You will have to install yaml-cpp too from: https://github.com/jbeder/yaml-cpp
 
-# What did I do
+# What did we do
 
 In the main script you will find the implementation of a SLAM execution using a fake trajectory. You can modify the yamls to change parameters. 
 To execute the example, clone the repo and then: 
