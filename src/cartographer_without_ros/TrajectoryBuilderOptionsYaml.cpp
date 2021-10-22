@@ -71,11 +71,23 @@ void TrajectoryBuilderOptionsYaml::setTrajectoryBuilder2DOptions(YAML::Node _con
 
     submaps2dOpt_.set_num_range_data(_config["submaps"]["num_range_data"].as<int>());
 
-    grid2dOpt_.set_grid_type(mapping::proto::GridOptions2D_GridType::GridOptions2D_GridType_PROBABILITY_GRID);
+    mapping::proto::GridOptions2D_GridType gridType;
+    switch(_config["submaps"]["grid_options_2d"]["grid_type"].as<int>()){
+        case 0: { gridType = mapping::proto::GridOptions2D_GridType::GridOptions2D_GridType_INVALID_GRID; break; }
+        case 1: { gridType = mapping::proto::GridOptions2D_GridType::GridOptions2D_GridType_PROBABILITY_GRID; break; }
+        case 2: { gridType = mapping::proto::GridOptions2D_GridType::GridOptions2D_GridType_TSDF; break; }
+    }
+    grid2dOpt_.set_grid_type(gridType);
     grid2dOpt_.set_resolution(_config["submaps"]["grid_options_2d"]["resolution"].as<float>());
     submaps2dOpt_.set_allocated_grid_options_2d(&grid2dOpt_);
 
-    rangeDataInserter2dOpt_.set_range_data_inserter_type(mapping::proto::RangeDataInserterOptions_RangeDataInserterType::RangeDataInserterOptions_RangeDataInserterType_PROBABILITY_GRID_INSERTER_2D);
+    mapping::proto::RangeDataInserterOptions_RangeDataInserterType rangeDataType;
+    switch(_config["submaps"]["range_data_inserter"]["range_data_inserter_type"].as<int>()){
+        case 0: { rangeDataType = mapping::proto::RangeDataInserterOptions_RangeDataInserterType::RangeDataInserterOptions_RangeDataInserterType_INVALID_INSERTER; break; }
+        case 1: { rangeDataType = mapping::proto::RangeDataInserterOptions_RangeDataInserterType::RangeDataInserterOptions_RangeDataInserterType_PROBABILITY_GRID_INSERTER_2D; break; }
+        case 2: { rangeDataType = mapping::proto::RangeDataInserterOptions_RangeDataInserterType::RangeDataInserterOptions_RangeDataInserterType_TSDF_INSERTER_2D; break; }
+    }
+    rangeDataInserter2dOpt_.set_range_data_inserter_type(rangeDataType);
 
     tsdfRangeInsert2dOpt_.set_truncation_distance(_config["submaps"]["range_data_inserter"]["tsdf_range_data_inserter"]["truncation_distance"].as<float>());
     tsdfRangeInsert2dOpt_.set_maximum_weight(_config["submaps"]["range_data_inserter"]["tsdf_range_data_inserter"]["maximum_weight"].as<float>());

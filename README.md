@@ -16,4 +16,5 @@ In the main script you will find the implementation of a SLAM execution using a 
 
 - Implementation with Lidar
 - Few variables still missing for config but for now I do not need them so I will modify it as I go
+- Why does it die when finishing execution
 
