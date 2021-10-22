@@ -1,4 +1,4 @@
-use_imu_data: true
+use_imu_data: False
 min_range: 0.0
 max_range: 30.0
 min_z: -0.8
@@ -6,12 +6,13 @@ max_z: 2.0
 missing_data_ray_length: 5.0
 num_accumulated_range_data: 1
 voxel_filter_size: 0.025
-use_online_correlative_scan_matching: false
+use_online_correlative_scan_matching: False
+imu_gravity_time_constant: 10.0
 
 adaptive_voxel_filter: 
   max_length: 0.5
   min_num_points: 200
-  max_range: 50.
+  max_range: 50.0
 
 loop_closure_adaptive_voxel_filter: 
   max_length: 0.9
@@ -29,7 +30,7 @@ ceres_scan_matcher:
   translation_weight: 10.0
   rotation_weight: 40.0
   ceres_solver_options: 
-    use_nonmonotonic_steps: false
+    use_nonmonotonic_steps: False
     max_num_iterations: 20
     num_threads: 1
 
@@ -38,9 +39,8 @@ motion_filter:
   max_distance_meters: 0.2
   max_angle_radians: 0.02 #1º
 
-imu_gravity_time_constant: 10.0
 pose_extrapolator: 
-  use_imu_based: false
+  use_imu_based: False
   constant_velocity: 
     imu_gravity_time_constant: 10.0
     pose_queue_duration: 0.001
@@ -55,7 +55,7 @@ pose_extrapolator:
     odometry_translation_weight: 1.0
     odometry_rotation_weight: 1.0
     solver_options: 
-      use_nonmonotonic_steps: false
+      use_nonmonotonic_steps: False
       max_num_iterations: 10
       num_threads: 1
     
@@ -68,20 +68,20 @@ submaps:
   range_data_inserter: 
     range_data_inserter_type: "PROBABILITY_GRID_INSERTER_2D"
     probability_grid_range_data_inserter: 
-      insert_free_space: true
+      insert_free_space: True
       hit_probability: 0.55
       miss_probability: 0.49
     
     tsdf_range_data_inserter: 
       truncation_distance: 0.3
-      maximum_weight: 10.
-      update_free_space: false
+      maximum_weight: 10.0
+      update_free_space: False
       normal_estimation_options: 
         num_normal_samples: 4
         sample_radius: 0.5
       
-      project_sdf_distance_to_scan_normal: true
-      update_weight_range_exponent: 0
+      project_sdf_distance_to_scan_normal: True
+      update_weight_range_exponent: 0.0
       update_weight_angle_scan_normal_to_ray_kernel_bandwidth: 0.5
       update_weight_distance_cell_to_hit_kernel_bandwidth: 0.5
     

@@ -40,13 +40,10 @@ mapping::MapBuilderInterface::LocalSlamResultCallback GetLocalSlamResultCallback
     };
 }
 
-
-
 int main(int _argc, char** _argv){
     std::string path = _argv[1];
     MapBuilderOptionsYaml mapBuilderOpt(path);
-    YAML::Node config;
-    TrajectoryBuilderOptionsYaml trajBuilderOpt(config);
+    TrajectoryBuilderOptionsYaml trajBuilderOpt(path);
 
     auto mapBuilder = mapping::CreateMapBuilder(mapBuilderOpt.getMapOpt());
 

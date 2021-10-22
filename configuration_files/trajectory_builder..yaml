@@ -1,7 +1,0 @@
-trajectory_builder_2d: "../configuration_files/trajectory_builder_2d.yaml"
-trajectory_builder_3d: "../configuration_files/trajectory_builder_3d.yaml"
-collate_fixed_frame: true
-collate_landmarks: false
-#  pure_localization_trimmer: 
-#    max_submaps_to_keep: 3
-#  
