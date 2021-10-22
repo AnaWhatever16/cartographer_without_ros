@@ -4,9 +4,15 @@
 #include <yaml-cpp/yaml.h>
 
 using namespace cartographer;
+
+/// This class is in charge of setting all the parameters of the TrajectoryBuilder, given the path where all the config files should exist.
 class TrajectoryBuilderOptionsYaml{
     public:
+        /// Constructor.
+        /// \param _path path to folder of config files
         TrajectoryBuilderOptionsYaml(std::string _path);
+
+        /// This method will return the configuration for the TrajectoryBuilder that we desire.
         mapping::proto::TrajectoryBuilderOptions getTrajectoryOpt() { return trajBuilderOpt_; }
 
     private:

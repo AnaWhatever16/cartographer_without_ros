@@ -4,11 +4,16 @@
 #include <yaml-cpp/yaml.h>
 
 using namespace cartographer;
+
+/// This class is in charge of setting all the parameters of the MapBuilder, given the path where all the config files should exist.
 class MapBuilderOptionsYaml{
     public:
+        /// Constructor.
+        /// \param _path path to folder of config files
         MapBuilderOptionsYaml(std::string _path);
-        mapping::proto::MapBuilderOptions getMapOpt() { return mapBuilderOpt_; }
 
+        /// This method will return the configuration for the MapBuilder that we desire.
+        mapping::proto::MapBuilderOptions getMapOpt() { return mapBuilderOpt_; }
 
     private:
         void setMapBuilderOptions(std::string _path);
