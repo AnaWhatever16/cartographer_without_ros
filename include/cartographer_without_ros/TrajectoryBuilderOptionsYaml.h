@@ -4,9 +4,9 @@
 #include <yaml-cpp/yaml.h>
 
 using namespace cartographer;
-class TrajectoryBuilderOptionsWrapper{
+class TrajectoryBuilderOptionsYaml{
     public:
-        TrajectoryBuilderOptionsWrapper(YAML::Node _config);
+        TrajectoryBuilderOptionsYaml(YAML::Node _config);
         mapping::proto::TrajectoryBuilderOptions getTrajectoryOpt() { return trajBuilderOpt; }
 
 

@@ -1,4 +1,10 @@
 optimize_every_n_nodes: 90
+max_num_final_iterations: 200
+global_sampling_ratio: 0.003
+log_residual_histograms: True
+global_constraint_search_after_n_seconds: 10.0
+matcher_translation_weight: 500
+matcher_rotation_weight: 1600
 
 constraint_builder: 
   sampling_ratio: 0.3
@@ -7,74 +13,64 @@ constraint_builder:
   global_localization_min_score: 0.6
   loop_closure_translation_weight: 11000
   loop_closure_rotation_weight: 100000
-  log_matches: true
+  log_matches: True
   fast_correlative_scan_matcher: 
-    linear_search_window: 7.
+    linear_search_window: 7.0
     angular_search_window: 0.52 #30º
-      branch_and_bound_depth: 7
+    branch_and_bound_depth: 7
     
-    ceres_scan_matcher: 
-      occupied_space_weight: 20.0
-      translation_weight: 10.0
-      rotation_weight: 1.0
-      ceres_solver_options: 
-        use_nonmonotonic_steps: true
-        max_num_iterations: 10
-        num_threads: 1
-      
-    fast_correlative_scan_matcher_3d: 
-      branch_and_bound_depth: 8
-      full_resolution_depth: 3
-      min_rotational_score: 0.77
-      min_low_resolution_score: 0.55
-      linear_xy_search_window: 5.
-      linear_z_search_window: 1.
-      angular_search_window: 0.26 #15ª
-    
-    ceres_scan_matcher_3d: 
-      occupied_space_weight_0: 5.
-      occupied_space_weight_1: 30.
-      translation_weight: 10.
-      rotation_weight: 1.
-      only_optimize_yaw: false
-      ceres_solver_options: 
-        use_nonmonotonic_steps: false
-        max_num_iterations: 10
-        num_threads: 1
-      
-    
-  
-  matcher_translation_weight: 500
-  matcher_rotation_weight: 1600
-  optimization_problem: 
-    huber_scale: 10
-    acceleration_weight: 110
-    rotation_weight: 16000
-    local_slam_pose_translation_weight: 100000
-    local_slam_pose_rotation_weight: 100000
-    odometry_translation_weight: 100000
-    odometry_rotation_weight: 100000
-    fixed_frame_pose_translation_weight: 10
-    fixed_frame_pose_rotation_weight: 100
-    fixed_frame_pose_use_tolerant_loss: false
-    fixed_frame_pose_tolerant_loss_param_a: 1
-    fixed_frame_pose_tolerant_loss_param_b: 1
-    log_solver_summary: false
-    use_online_imu_extrinsics_in_3d: true
-    fix_z_in_3d: false
+  ceres_scan_matcher: 
+    occupied_space_weight: 20.0
+    translation_weight: 10.0
+    rotation_weight: 1.0
     ceres_solver_options: 
-      use_nonmonotonic_steps: false
-      max_num_iterations: 50
-      num_threads: 7
+      use_nonmonotonic_steps: True
+      max_num_iterations: 10
+      num_threads: 1
+      
+  fast_correlative_scan_matcher_3d: 
+    branch_and_bound_depth: 8
+    full_resolution_depth: 3
+    min_rotational_score: 0.77
+    min_low_resolution_score: 0.55
+    linear_xy_search_window: 5.0
+    linear_z_search_window: 1.0
+    angular_search_window: 0.26 #15ª
     
-  
-  max_num_final_iterations: 200
-  global_sampling_ratio: 0.003
-  log_residual_histograms: true
-  global_constraint_search_after_n_seconds: 10.0
-  #  overlapping_submaps_trimmer_2d: 
-  #    fresh_submaps_count: 1
-  #    min_covered_area: 2
-  #    min_added_submaps_count: 5
-  #  
+  ceres_scan_matcher_3d: 
+    occupied_space_weight_0: 5.0
+    occupied_space_weight_1: 30.0
+    translation_weight: 10.0
+    rotation_weight: 1.0
+    only_optimize_yaw: False
+    ceres_solver_options: 
+      use_nonmonotonic_steps: False
+      max_num_iterations: 10
+      num_threads: 1
+      
+optimization_problem: 
+  huber_scale: 10
+  acceleration_weight: 110
+  rotation_weight: 16000
+  local_slam_pose_translation_weight: 100000
+  local_slam_pose_rotation_weight: 100000
+  odometry_translation_weight: 100000
+  odometry_rotation_weight: 100000
+  fixed_frame_pose_translation_weight: 10
+  fixed_frame_pose_rotation_weight: 100
+  fixed_frame_pose_use_tolerant_loss: False
+  fixed_frame_pose_tolerant_loss_param_a: 1
+  fixed_frame_pose_tolerant_loss_param_b: 1
+  log_solver_summary: False
+  use_online_imu_extrinsics_in_3d: True
+  fix_z_in_3d: False
+  ceres_solver_options: 
+    use_nonmonotonic_steps: False
+    max_num_iterations: 50
+    num_threads: 7
 
+#  overlapping_submaps_trimmer_2d: 
+#    fresh_submaps_count: 1
+#    min_covered_area: 2
+#    min_added_submaps_count: 5
+# 

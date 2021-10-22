@@ -1,10 +1,10 @@
-#include <cartographer_without_ros/TrajectoryBuilderOptionsWrapper.h>
+#include <cartographer_without_ros/TrajectoryBuilderOptionsYaml.h>
 
-TrajectoryBuilderOptionsWrapper::TrajectoryBuilderOptionsWrapper(YAML::Node _config){
+TrajectoryBuilderOptionsYaml::TrajectoryBuilderOptionsYaml(YAML::Node _config){
     setTrajectoryBuilderOptions(_config);
 }
 
-void TrajectoryBuilderOptionsWrapper::setTrajectoryBuilder2DOptions(YAML::Node _config){
+void TrajectoryBuilderOptionsYaml::setTrajectoryBuilder2DOptions(YAML::Node _config){
     trajBuilderOpt.set_collate_fixed_frame(true);
     trajBuilderOpt.set_collate_landmarks(false);
 
@@ -101,7 +101,7 @@ void TrajectoryBuilderOptionsWrapper::setTrajectoryBuilder2DOptions(YAML::Node _
     traj2dOpt.set_allocated_submaps_options(&submapsOpt2d);
 }
 
-void TrajectoryBuilderOptionsWrapper::setTrajectoryBuilder3DOptions(YAML::Node _config){
+void TrajectoryBuilderOptionsYaml::setTrajectoryBuilder3DOptions(YAML::Node _config){
     traj3dOpt.set_imu_gravity_time_constant(10);
     traj3dOpt.set_max_range(60);
     traj3dOpt.set_min_range(1);
@@ -186,7 +186,7 @@ void TrajectoryBuilderOptionsWrapper::setTrajectoryBuilder3DOptions(YAML::Node _
     traj3dOpt.set_allocated_submaps_options(&submapsOpt3d);
 }
 
-void TrajectoryBuilderOptionsWrapper::setTrajectoryBuilderOptions(YAML::Node _config){
+void TrajectoryBuilderOptionsYaml::setTrajectoryBuilderOptions(YAML::Node _config){
     setTrajectoryBuilder2DOptions(_config);
     trajBuilderOpt.set_allocated_trajectory_builder_2d_options(&traj2dOpt);
 

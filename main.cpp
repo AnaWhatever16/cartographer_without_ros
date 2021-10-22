@@ -1,5 +1,6 @@
 
-#include <cartographer_without_ros/MapBuilderOptionsWrapper.h>
+#include <cartographer_without_ros/MapBuilderOptionsYaml.h>
+#include <cartographer_without_ros/TrajectoryBuilderOptionsYaml.h>
 #include <iostream>
 #include <vector>
 
@@ -42,9 +43,10 @@ mapping::MapBuilderInterface::LocalSlamResultCallback GetLocalSlamResultCallback
 
 
 int main(int _argc, char** _argv){
+    std::string path = _argv[1];
+    MapBuilderOptionsYaml mapBuilderOpt(path);
     YAML::Node config;
-    MapBuilderOptionsWrapper mapBuilderOpt(config);
-    TrajectoryBuilderOptionsWrapper trajBuilderOpt(config);
+    TrajectoryBuilderOptionsYaml trajBuilderOpt(config);
 
     auto mapBuilder = mapping::CreateMapBuilder(mapBuilderOpt.getMapOpt());
 
