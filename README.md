@@ -1,7 +1,6 @@
 # Intro
 
-Hi everyone! We personally prefer not to use ROS in our systems, because what is life without a little risk and throwing your compute out the window because the documentation for what you need is non-existent.
-This implementation is written for C++ and CMake and we used YAML instead of Lua files for configuration purposes because we were unable to identify how to use the Lua files properly.
+Hi everyone! We personally prefer not to use ROS in our systems, because what is life without a little risk and throwing your compute out the window because the documentation for what you need is non-existent. This implementation is written for C++ and CMake.
 
 This is a minimum case use of cartographer 2D SLAM (for now), as the documentation is not very clear. We created this repo to be a starting point (also for us). 
 
@@ -12,13 +11,15 @@ You will have to install yaml-cpp too from: https://github.com/jbeder/yaml-cpp
 
 # What did we do
 
-In the main script you will find the implementation of a SLAM execution using a fake trajectory. You can modify the yamls to change parameters. 
+There are 2 mains (for now): yaml and lua implementation
+
+In the main script you will find the implementation of a SLAM execution using a fake trajectory. You can modify the yamls or lua files to change parameters. 
 To execute the example, clone the repo and then: 
 ```
 cd /path/to/cartographer_without_ros
 mkdir build && cd build
 cmake .. && make -j4
-./fake_trajectory
+./fake_trajectory_yaml # or ./fake_trajectory_lua
 ```
 
 # WIP

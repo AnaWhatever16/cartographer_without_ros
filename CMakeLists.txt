@@ -40,10 +40,6 @@ find_package(PCL REQUIRED COMPONENTS common)
 target_include_directories(cartographer_without_ros PUBLIC ${PCL_INCLUDE_DIRS})
 target_link_libraries(cartographer_without_ros PUBLIC ${PCL_LIBRARIES})
 
-#YAML
-find_package(yaml-cpp REQUIRED)
-target_include_directories(cartographer_without_ros PUBLIC ${YAML_CPP_INCLUDE_DIR})
-target_link_libraries(cartographer_without_ros LINK_PUBLIC ${YAML_CPP_LIBRARIES} yaml-cpp)
 
 # Cartoghrapher
 find_package(cartographer REQUIRED)
@@ -51,5 +47,16 @@ include("${CARTOGRAPHER_CMAKE_DIR}/functions.cmake")
 google_initialize_cartographer_project()
 target_link_libraries(cartographer_without_ros PUBLIC cartographer)
 
-add_executable(fake_trajectory main.cpp)
-target_link_libraries(fake_trajectory PUBLIC cartographer_without_ros)
+#---------------------------------------------------------------------------------------------------------------------
+
+add_executable(fake_trajectory_yaml main_yaml.cpp)
+target_link_libraries(fake_trajectory_yaml PUBLIC cartographer_without_ros)
+#YAML
+find_package(yaml-cpp REQUIRED)
+target_include_directories(fake_trajectory_yaml PUBLIC ${YAML_CPP_INCLUDE_DIR})
+target_link_libraries(fake_trajectory_yaml LINK_PUBLIC ${YAML_CPP_LIBRARIES} yaml-cpp)
+
+#---------------------------------------------------------------------------------------------------------------------
+
+add_executable(fake_trajectory_lua main_lua.cpp)
+target_link_libraries(fake_trajectory_lua PUBLIC cartographer_without_ros)
